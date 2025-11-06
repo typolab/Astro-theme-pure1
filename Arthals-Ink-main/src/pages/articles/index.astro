@@ -1,0 +1,104 @@
+---
+import type { CollectionEntry } from 'astro:content'
+import { getBlogCollection, sortMDByDate } from 'astro-pure/server'
+import { Button, Icon } from 'astro-pure/user'
+import PageLayout from '@/layouts/BaseLayout.astro'
+import ArticleLinks from '@/components/ArticleLinks.astro'
+
+export const prerender = true
+
+const allPosts = await getBlogCollection()
+const allPostsByDate = sortMDByDate(allPosts)
+
+const meta = {
+  description: '所有文章的完整列表，按标题排序',
+  title: '文章索引'
+}
+
+// Group posts by first letter for better navigation
+const postsByLetter = allPostsByDate.reduce((acc, post) => {
+  const firstChar = post.data.title.charAt(0).toUpperCase()
+  const key = /[A-Z]/.test(firstChar) ? firstChar : '#'
+  if (!acc[key]) acc[key] = []
+  acc[key].push(post)
+  return acc
+}, {} as Record<string, typeof allPostsByDate>)
+
+const sortedKeys = Object.keys(postsByLetter).sort((a, b) => {
+  if (a === '#') return 1
+  if (b === '#') return -1
+  return a.localeCompare(b)
+})
+---
+
+<PageLayout {meta}>
+  <Button title='返回' href='/blog' variant='back' />
+
+  <main class='mt-6 lg:mt-10'>
+    <div id='content-header' class='animate'>
+      <h1 class='mb-6 text-3xl font-medium'>文章索引</h1>
+      <p class='text-muted-foreground mb-8'>
+        共 {allPostsByDate.length} 篇文章
+      </p>
+    </div>
+
+    {allPostsByDate.length === 0 && <p>暂无文章。</p>}
+
+    {allPostsByDate.length > 0 && (
+      <section id='content' class='animate' aria-label='文章索引列表'>
+        <!-- Navigation by first letter -->
+        <div class='mb-8 flex flex-wrap gap-2'>
+          {sortedKeys.map((letter) => (
+            <a
+              href={`#section-${letter}`}
+              class='px-3 py-1 text-sm bg-muted hover:bg-primary hover:text-primary-foreground rounded-md transition-colors duration-200'
+            >
+              {letter}
+            </a>
+          ))}
+        </div>
+
+        <!-- Articles grouped by first letter -->
+        <div class='space-y-12'>
+          {sortedKeys.map((letter) => (
+            <div id={`section-${letter}`} class='scroll-mt-20'>
+              <h2 class='text-2xl font-bold mb-6 text-primary flex items-center gap-2'>
+                <Icon name='hashtag' class='size-5' />
+                {letter === '#' ? '符号/数字' : letter}
+                <span class='text-sm font-normal text-muted-foreground'>
+                  ({postsByLetter[letter].length})
+                </span>
+              </h2>
+              <ArticleLinks 
+                posts={postsByLetter[letter] as CollectionEntry<'blog'>[]} 
+                showDate={true}
+                showDescription={true}
+                className='ml-4'
+              />
+            </div>
+          ))}
+        </div>
+
+        <!-- Back to top button -->
+        <div class='mt-12 text-center'>
+          <Button 
+            title='回到顶部' 
+            href='#content-header'
+            variant='outline'
+            class='inline-flex items-center gap-2'
+          >
+            <Icon name='up' class='size-4' />
+            回到顶部
+          </Button>
+        </div>
+      </section>
+    )}
+  </main>
+</PageLayout>
+
+<style>
+  /* Smooth scroll behavior */
+  html {
+    scroll-behavior: smooth;
+  }
+</style>

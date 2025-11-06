@@ -1,0 +1,118 @@
+---
+import type { CollectionEntry } from 'astro:content'
+import { Icon } from 'astro-pure/user'
+
+interface Props {
+  currentPost: CollectionEntry<'blog'>
+  allPosts: CollectionEntry<'blog'>[]
+  maxRelated?: number
+}
+
+const { currentPost, allPosts, maxRelated = 5 } = Astro.props
+
+// Find related posts based on tags
+const getRelatedPosts = () => {
+  const currentTags = currentPost.data.tags || []
+  
+  if (currentTags.length === 0) {
+    // If no tags, return recent posts excluding current
+    return allPosts
+      .filter(post => post.id !== currentPost.id)
+      .slice(0, maxRelated)
+  }
+
+  // Calculate similarity score based on shared tags
+  const postsWithScore = allPosts
+    .filter(post => post.id !== currentPost.id)
+    .map(post => {
+      const postTags = post.data.tags || []
+      const sharedTags = currentTags.filter(tag => postTags.includes(tag))
+      return {
+        post,
+        score: sharedTags.length
+      }
+    })
+    .filter(item => item.score > 0)
+    .sort((a, b) => b.score - a.score)
+
+  // If we have related posts with shared tags, return them
+  if (postsWithScore.length > 0) {
+    return postsWithScore.slice(0, maxRelated).map(item => item.post)
+  }
+
+  // Otherwise, return recent posts
+  return allPosts
+    .filter(post => post.id !== currentPost.id)
+    .slice(0, maxRelated)
+}
+
+const relatedPosts = getRelatedPosts()
+
+// Generate post URL using custom slug or default id
+const getPostUrl = (post: CollectionEntry<'blog'>) => {
+  const slug = (post.data as any).slug || post.id
+  return `/blog/${slug}`
+}
+---
+
+{relatedPosts.length > 0 && (
+  <aside class='related-articles bg-muted/30 rounded-lg p-6 mt-8'>
+    <h3 class='text-lg font-semibold mb-4 flex items-center gap-2'>
+      <Icon name='link' class='size-5' />
+      相关文章
+    </h3>
+    
+    <ul class='space-y-3'>
+      {relatedPosts.map((post) => (
+        <li>
+          <a 
+            href={getPostUrl(post)}
+            class='block p-3 rounded-md hover:bg-background transition-colors duration-200 group'
+            data-astro-prefetch
+          >
+            <h4 class='font-medium text-foreground group-hover:text-primary transition-colors duration-200'>
+              {post.data.title}
+            </h4>
+            {post.data.description && (
+              <p class='text-sm text-muted-foreground mt-1 line-clamp-2'>
+                {post.data.description}
+              </p>
+            )}
+            {post.data.tags && post.data.tags.length > 0 && (
+              <div class='flex flex-wrap gap-1 mt-2'>
+                {post.data.tags.slice(0, 3).map((tag: string) => (
+                  <span class='text-xs bg-primary/10 text-primary px-2 py-1 rounded-full'>
+                    {tag}
+                  </span>
+                ))}
+                {post.data.tags.length > 3 && (
+                  <span class='text-xs text-muted-foreground'>
+                    +{post.data.tags.length - 3}
+                  </span>
+                )}
+              </div>
+            )}
+          </a>
+        </li>
+      ))}
+    </ul>
+
+    <div class='mt-6 pt-4 border-t border-border'>
+      <a 
+        href='/articles'
+        class='text-sm text-primary hover:underline flex items-center gap-1'
+        data-astro-prefetch
+      >
+        查看所有文章
+        <Icon name='up' class='size-3' />
+      </a>
+    </div>
+  </aside>
+)}
+
+<style>
+  .related-articles a:hover h4 {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+</style>

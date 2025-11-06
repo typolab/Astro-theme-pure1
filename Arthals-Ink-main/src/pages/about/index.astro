@@ -1,0 +1,261 @@
+---
+import config from 'virtual:config'
+import { Button, Collapse, Spoiler, Timeline } from 'astro-pure/user'
+import Signature from '../../../packages/pure/components/user/Signature.astro'
+import PageLayout from '@/layouts/CommonPage.astro'
+import Substats from '@/components/about/Substats.astro'
+import ToolSection from '@/components/about/ToolSection.astro'
+import zotero from '@/assets/tools/zotero.png'
+
+const headings = [
+  {
+    depth: 2,
+    slug: 'tools',
+    text: 'Tools'
+  },
+  {
+    depth: 2,
+    slug: 'social-networks',
+    text: 'Social Networks'
+  },
+  {
+    depth: 2,
+    slug: 'education',
+    text: 'Education'
+  },
+  {
+    depth: 2,
+    slug: 'experience',
+    text: 'Experience'
+  },
+  {
+    depth: 2,
+    slug: 'about-blog',
+    text: 'About Blog'
+  }
+]
+---
+
+<PageLayout title='About' {headings} comment>
+  <h2 id='general-talk' class='invisible m-0 h-0'>General Talk</h2>
+  <p class='text-muted-foreground'>Developer / Designer / <del>Student </del></p>
+  <p>你好，我是 CiZai，是一个普普通通的程序员。</p>
+  <p>
+    目前就职于金山办公
+  </p>
+  <p>我的兴趣主要在 Coding / AI 方向。</p>
+  <p>我喜欢 Minecraft。</p>
+
+
+  {/* tools */}
+  <h2 id='tools'>Tools</h2>
+  <p>以下是我正在使用的一些工具：</p>
+  <ToolSection
+    class='mb-5'
+    title='Productivity'
+    tools={[
+      {
+        name: 'Arc',
+        description: 'Broswer',
+        href: 'https://arc.net/',
+        icon: import('@/assets/tools/arc.svg?raw')
+      },
+      {
+        name: 'Tailscale',
+        description: 'VPN',
+        href: 'https://tailscale.com/',
+        icon: import('@/assets/tools/tailscale.svg?raw')
+      },
+      {
+        name: 'Typora',
+        description: 'Markdown Editor',
+        href: 'https://typora.io/',
+        icon: import('@/assets/tools/typora.svg?raw')
+      },
+      {
+        name: 'Zotero',
+        description: 'Reference Management',
+        href: 'https://www.zotero.org/',
+        icon: zotero
+      },
+      {
+        name: 'Get笔记',
+        description: 'Note Taking',
+        href: 'https://www.biji.com/',
+        icon: import('@/assets/tools/get-notes.svg?raw')
+      },
+      {
+        name: '1Password',
+        description: 'Password Manager',
+        href: 'https://1password.com/',
+        icon: import('@/assets/tools/1password.svg?raw')
+      },
+      {
+        name: 'SnippetsLab',
+        description: 'Code Snippets',
+        href: 'https://www.renfei.org/snippets-lab/',
+        icon: import('@/assets/tools/snippetslab.svg?raw')
+      },
+      {
+        name: 'PasteNow',
+        description: 'Clipboard Manager',
+        href: 'https://pastenow.app/',
+        icon: import('@/assets/tools/pastenow.svg?raw')
+      },
+      {
+        name: 'PicGo',
+        description: 'Image Uploader',
+        href: 'https://picgo.github.io/PicGo-Doc/',
+        icon: import('@/assets/tools/picgo.svg?raw')
+      }
+    ]}
+  />
+  <ToolSection
+    class='mb-5'
+    title='Development'
+    tools={[
+      {
+        name: 'Cursor',
+        description: 'AI Code Editor',
+        href: 'https://www.cursor.com/',
+        icon: import('@/assets/tools/cursor.svg?raw'),
+        darkIcon: import('@/assets/tools/cursor_dark.svg?raw')
+      },
+      {
+        name: 'VS Code',
+        description: 'IDE',
+        href: 'https://code.visualstudio.com/',
+        icon: import('@/assets/tools/vscode.svg?raw')
+      },
+      {
+        name: 'Warp',
+        description: 'Terminal',
+        href: 'https://warp.dev/',
+        icon: import('@/assets/tools/warp.svg?raw')
+      },
+      {
+        name: 'LobeChat',
+        description: 'AI Chat',
+        href: 'https://www.lobehub.com/',
+        icon: import('@/assets/tools/lobechat.svg?raw')
+      },
+      {
+        name: 'IntelliJ IDEA',
+        description: 'Java IDE',
+        href: 'https://www.jetbrains.com/idea/',
+        icon: import('@/assets/tools/idea.svg?raw')
+      },
+      {
+        name: 'WebStorm',
+        description: 'JavaScript IDE',
+        href: 'https://www.jetbrains.com/webstorm/',
+        icon: import('@/assets/tools/webstorm.svg?raw')
+      },
+      {
+        name: 'Docker',
+        description: 'Containerization',
+        href: 'https://www.docker.com/',
+        icon: import('@/assets/tools/docker.svg?raw')
+      },
+      {
+        name: 'DBeaver',
+        description: 'Database Tool',
+        href: 'https://dbeaver.io/',
+        icon: import('@/assets/tools/dbeaver.svg?raw')
+      }
+    ]}
+  />
+  <ToolSection
+    class='mb-5'
+    title='Design'
+    tools={[
+      {
+        name: 'Photoshop',
+        description: 'Picture Editing',
+        href: 'https://www.adobe.com/products/photoshop',
+        icon: import('@/assets/tools/photoshop.svg?raw')
+      },
+      // {
+      //   name: 'Illustrator',
+      //   description: 'Vector Drawing',
+      //   href: 'https://www.adobe.com/products/illustrator',
+      //   icon: import('@/assets/tools/illustrator.svg?raw')
+      // },
+      {
+        name: 'Figma',
+        description: 'Vector Drawing',
+        href: 'https://www.figma.com/',
+        icon: import('@/assets/tools/figma.svg?raw')
+      },
+      {
+        name: 'draw.io',
+        description: 'Diagram Editor',
+        href: 'https://app.diagrams.net/',
+        icon: import('@/assets/tools/drawio.svg?raw')
+      }
+    ]}
+  />
+  <ToolSection
+    class='mb-5'
+    title='Environment'
+    tools={[
+      {
+        name: 'MacOS Sonoma 14.7.1',
+        description: "MacBook Pro 14'",
+        href: 'https://www.apple.com/macos/',
+        icon: import('@/assets/tools/apple.svg?raw')
+      }
+    ]}
+  />
+  <ToolSection
+    class='mb-5'
+    title='Utilities'
+    tools={[
+      {
+        name: 'Bartender 5',
+        description: 'Menu Bar Manager',
+        href: 'https://www.macbartender.com/',
+        icon: import('@/assets/tools/bartender.svg?raw')
+      },
+      {
+        name: 'Keka',
+        description: 'Archive Utility',
+        href: 'https://www.keka.io/',
+        icon: import('@/assets/tools/keka.svg?raw')
+      },
+      {
+        name: 'iShot Pro',
+        description: 'Screenshot Tool',
+        href: 'https://www.better365.cn/ishot.html',
+        icon: import('@/assets/tools/ishot.svg?raw')
+      }
+    ]}
+  />
+
+  {/* social-networks */}
+  <h2 id='social-networks'>Social Networks</h2>
+  <p>你可以在以下平台找到我：</p>
+  <Substats
+    stats={[
+      {
+        platform: 'GitHub',
+        icon: 'github',
+        link: 'https://github.com/CiZaii',
+        text: 'followers',
+        api: 'github/CiZaii'
+      }
+    ]}
+  />
+
+  <h2 id='education'>Education</h2>
+  <Timeline
+    events={[
+      {
+        date: '2021-09-01',
+        content: '<a href=""target="_blank">沧州师范学院</a>'
+      }
+    ]}
+  />
+
+  {config.signature && <Signature />}
+</PageLayout>
